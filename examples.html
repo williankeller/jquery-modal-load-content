@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jQuery Modal Load Content</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./dist/css/modal-load-content.css">
+    <!-- Used just to create example file. (Not necessary at all) -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <a class="btn btn-danger call-to-action" href="http://www.google.com">Google.com</a>
+
+      <a class="btn btn-success call-to-action" href="http://williankeller.github.io/checkbox-switch">Git - Checkbox Switch </a>
+
+      <a class="btn btn-warning call-to-action" href="/not-here.php">Error page</a>
+
+      <button class="btn call-to-action" data-href="http://williankeller.github.io/checkbox-switch">Not a link like three ones</button>
+    </div>
+
+    <!-- Necessary jQuery instance file -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+
+    <!-- Custom select script file -->
+    <script src="./src/js/modal-load-content.js"></script>
+    <script>
+      $('.call-to-action').modalLoadContent({
+        debugMode: true
+      });
+    </script>
+  </body>
+</html>
