@@ -6,7 +6,7 @@
 .modal-load-content-container {
   background-color: #fff;
   border: 0;
-  box-shadow: 2px 2px 7px rgba(15, 16, 21, 0.1);
+  box-shadow: 2px 2px 7px rgba(15, 16, 21, .1);
   display: none;
   margin: 0;
   overflow: hidden;
@@ -14,16 +14,16 @@
   position: fixed;
   width: 600px;
   z-index: 101;
-}
-.modal-load-content-container.opened {
-  display: block;
-}
-.modal-load-content-container > * {
-  padding: 20px;
+  &.opened {
+    display: block;
+  }
+  > * {
+    padding: 20px;
+  }
 }
 
 .modal-load-content-overlay {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, .4);
   display: none;
   height: 100%;
   left: 0;
@@ -31,7 +31,7 @@
   top: 0;
   width: 100%;
   z-index: 100;
-}
-.modal-load-content-overlay.opened {
-  display: block;
+  &.opened {
+    display: block;
+  }
 }
