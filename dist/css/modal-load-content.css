@@ -1,6 +1,22 @@
+/* Start demo styles */
 .container {
-  margin-top: 50px;
+  margin-top: 150px;
   text-align: center;
+}
+
+/* End demo styles */
+.modal-load-content-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+.modal-load-content-overlay.opened {
+  display: block;
 }
 
 .modal-load-content-container {
@@ -15,23 +31,23 @@
   width: 600px;
   z-index: 101;
 }
-.modal-load-content-container.opened {
-  display: block;
-}
 .modal-load-content-container > * {
   padding: 20px;
 }
-
-.modal-load-content-overlay {
-  background-color: rgba(0, 0, 0, 0.4);
-  display: none;
-  height: 100%;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-}
-.modal-load-content-overlay.opened {
+.modal-load-content-container.opened {
   display: block;
+}
+.modal-load-content-container .modal-load-content-close {
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.modal-load-content-container .modal-load-content-error {
+  color: orangered;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
 }
