@@ -1,8 +1,8 @@
-(function ($) {
-
+(function ($, window, document) {
   "use strict";
 
   $.fn.modalLoadContent = function (options) {
+
     /**
      * Default configuration parameters.
      *
@@ -10,7 +10,20 @@
      */
     var defaults = {
       // If true print process steps under console.
-      debugMode: false
+      debugMode: false,
+
+      // Default modal classes.
+      overlayClass: '.modal-load-content-overlay',
+      containerClass: '.modal-load-content-container',
+
+      // Modal close definitions.
+      closeButtonClass: '.modal-load-content-close',
+      closeButtonIcon: '[Close]',
+      closeButtonText: 'Close modal',
+
+      // Default settings to error.
+      errorClass: 'modal-load-content-error',
+      errorText: 'The requested page could not be loaded.'
     };
     // Merging settings.
     var settings = $.extend({}, defaults, options);
@@ -52,8 +65,8 @@
     var getModalIdentifier = function (href) {
       // Replace all spaces to hiphen.
       var hash = href.replace(/[^a-zA-Z0-9]+/g, '-');
-      // Check if must return with ID.
 
+      // Return identifier ID and number.
       return {
         id: '#modal-load-content-' + hash,
         text: 'modal-load-content-' + hash
@@ -65,9 +78,9 @@
      */
     var buildModalOverlay = function () {
       // Build overlay if still doesn't exist.
-      if (! $('.modal-load-content-overlay').length) {
+      if (! $(settings.overlayClass).length) {
         $('<div/>', {
-          'class': 'modal-load-content-overlay'
+          'class': settings.overlayClass.replace('.', '')
         }).appendTo('body');
       }
     };
@@ -75,7 +88,6 @@
     /**
      * Build modal container to receive content that will be loaded.
      *
-     * @param {Object} element
      * @returns {string} identifier
      */
     var buildModalContainer = function (identifier) {
@@ -87,24 +99,13 @@
       }
       // Build div to modal and inject into body.
       $('<div/>', {
-        'class': 'modal-load-content-container',
+        'class': settings.containerClass.replace('.', ''),
         'id': identifier.text
       }).appendTo('body');
 
       debugging('build', identifier.id);
 
       return identifier.id;
-    };
-
-    /**
-     * Remove created modal container from DOM.
-     *
-     * @param {string} modal
-     */
-    var removeModalContainer = function (container) {
-      $(container).remove();
-
-      debugging('modal removed', container);
     };
 
     /**
@@ -115,12 +116,12 @@
      */
     var resizeModal = function () {
       // Kills function if modal is not opened.
-      if (! $('.modal-load-content-container').hasClass('opened')) {
+      if (! $(settings.containerClass).hasClass('opened')) {
         return false;
       }
 
       // Working just with modal that contains opened class.
-      var $modal = $('.modal-load-content-container.opened');
+      var $modal = $(settings.containerClass + '.opened');
 
       // Reset the backdrop height/width to get accurate document size.
       $modal.removeAttr('style');
@@ -155,33 +156,34 @@
     /**
      * Open a modal by a provided container path.
      *
-     * @param {string} path
+     * @param {string} container
      *   Route path of the link page.
-     * @param {Boolean} loaded
-     *   Status to check if modal is already loaded.
      */
-    var openModal = function (container, loaded) {
+    var openModal = function (container) {
       // Display overlay.
-      $('.modal-load-content-overlay').addClass('opened');
+      $(settings.overlayClass).addClass('opened');
 
+      // Display modal container.
       $(container).addClass('opened');
-      debugging('opening', container);
 
+      // Resize modal after open to avoid image load.
       resizeModal();
+
+      debugging('opening', container);
     };
 
     /**
      * Closes current modal or all of them.
      */
-    var closeModal = function (container) {
-      var modal = container || '.modal-load-content-container.opened';
+    var closeModal = function () {
+      var modal = settings.containerClass + '.opened';
       // Hide modal.
       $(modal).removeClass('opened')
         // Reset the backdrop height/width to get accurate document size.
         .removeAttr('style');
 
       // Hide overlay.
-      $('.modal-load-content-overlay').removeClass('opened');
+      $(settings.overlayClass).removeClass('opened');
 
       debugging('closing', 'modal');
     };
@@ -189,8 +191,10 @@
     /**
      * Work to load the content from a URL inside the modal container.
      *
+     * @param {DOM} element
      * @param {string} container
      * @param {string} destination
+     * @callback {function} callback
      * @returns {Boolean}
      */
     var loadContent = function (element, container, destination, callback) {
@@ -201,7 +205,6 @@
 
         return false;
       }
-
       // Specify a portion of the remote document to be inserted if exist.
       var target = [
         destination,
@@ -212,17 +215,24 @@
 
       // Execute load action.
       $(container).load(destination, function (response, status, xhr) {
+        // Create and append close button.
+        $('<span/>', {
+          'class': settings.closeButtonClass.replace('.', ''),
+          'title': settings.closeButtonText,
+          'text': settings.closeButtonIcon
+        }).appendTo(container);
+
+        debugging('loaded from', destination);
+
         // Any result different from success:
         if (status !== 'success') {
           $('<p/>', {
-            'text': 'The requested page could not be loaded.',
-            'class': 'modal-load-content-error'
+            'text': settings.errorText,
+            'class': settings.errorClass
           }).appendTo(container);
 
           debugging('load error', xhr.status + ' ' + xhr.statusText);
         }
-        debugging('loaded from', destination);
-
         // Callback function.
         callback(response);
       });
@@ -235,26 +245,21 @@
      * @returns {Boolean}
      */
     var detectClickAction = function (element) {
-      var $element = $(element);
-
-      $element.on('click', function (event) {
+      // Click at link event.
+      $(element).on('click', function (event) {
         event.preventDefault();
 
         // Build modal overlay content and insert into the body.
         buildModalOverlay();
-
         // Get href value from defined item.
         var href = getModalHref(element);
-
         // Filter and return a clean ID from a URL.
         var identifier = getModalIdentifier(href);
-
         // Build modal container to receive content that will be loaded.
         var container = buildModalContainer(identifier);
 
         // Work to load the content from a URL inside the modal container.
         loadContent(element, container, href, function () {
-
           // Open a modal by a provided container path as fallback.
           openModal(container);
         });
@@ -263,29 +268,47 @@
     };
 
     /**
-     * Detect escape key press to hide modal.
+     * Open modal with the related URL fragment.
      *
-     * @event keyup
+     * @param {DOM} elements
+     * @returns {Boolean} false
      */
-    var detectKeyboardAction = function () {
+    var detectUrlFragment = function (elements) {
+      // Check if exist modal.
+      if (window.location.hash) {
+        // Get fragment from URL.
+        var fragment = window.location.hash.substring(1);
+
+        // Search all links into modal-gallery-taco taco.
+        elements.each(function () {
+          // Filter URL ro load modal.
+          var href = getModalHref($(this));
+
+          // Check if exist some tout that contain this fragment.
+          if (href === fragment) {
+            // Simulate click action to open modal and stop loop.
+            $(this).click();
+          }
+        });
+      }
+      return false;
+    };
+
+    /**
+     * Function to bind actions to close modal.
+     */
+    var detectActionsToClose = function () {
+      // Detect escape key press to hide modal.
       $(document).on('keyup', function (event) {
         if (event.keyCode === 27) {
           //  Closes current modal as global.
           closeModal();
         }
       });
-    };
-
-    /**
-     * Detect click action under overlay.
-     *
-     * @event resize
-     */
-    var detectOverlayAction = function () {
-      $(document).on('click', '.modal-load-content-overlay', function () {
-        //  Closes current modal as global.
-        closeModal();
-      });
+      // Detect click at overlay area.
+      $(document).on('click', settings.overlayClass, closeModal);
+      // Detect click at close button.
+      $(document).on('click', settings.closeButtonClass, closeModal);
     };
 
     /**
@@ -298,21 +321,30 @@
     };
 
     /**
+     * Function to init the modal handlers.
+     *
+     * @param {DOM} elements
+     * @returns {DOM}
+     */
+    var init = function (elements) {
+      elements.each(function () {
+        // Build the custom select elements.
+        detectClickAction(this);
+      });
+      // Open modal with the related URL fragment.
+      detectUrlFragment(elements);
+      // Detect resize action to improve modal placement.
+      detectResizeAction();
+      // Detect click action under overlay.
+      detectActionsToClose();
+
+      return elements;
+    };
+
+    /**
      * Return to render and build to each matched elements.
      */
-    return this.each(function () {
-      // Build the custom select elements.
-      detectClickAction(this);
-
-      // Detect escape key press to hide modal.
-      detectKeyboardAction(this);
-
-      // Detect resize action to improve modal placement.
-      detectResizeAction(this);
-
-      // Detect click action under overlay.
-      detectOverlayAction(this);
-    });
+    return init(this);
   };
 
-})(jQuery);
+})(jQuery, window, document);
