@@ -10,20 +10,25 @@
   </head>
   <body>
     <div class="container">
-      <a class="btn btn-danger call-to-action" href="http://www.google.com">Google.com</a>
-
-      <a class="btn btn-success call-to-action" data-target=".page-header" href="http://williankeller.github.io/checkbox-switch/">Git - Checkbox Switch </a>
-
-      <a class="btn btn-warning call-to-action" href="/not-here.php">Error page</a>
-
-      <button class="btn call-to-action" data-href="http://williankeller.github.io/checkbox-switch/">Not a link like three ones</button>
+      <div class="row">
+        <div class="col-md-3">
+          <a class="btn btn-danger call-to-action" href="http://www.google.com">Try to load Google.com</a>
+        </div>
+        <div class="col-md-3">
+          <a class="btn btn-success call-to-action" data-target=".page-header" href="http://williankeller.github.io/checkbox-switch/">Open Checkbox Switch </a>
+        </div>
+        <div class="col-md-3">
+          <a class="btn btn-warning call-to-action" href="/not-here.php">Try to load Error page</a>
+        </div>
+        <div class="col-md-3">
+          <button class="btn call-to-action" data-href="http://williankeller.github.io/checkbox-switch/">This is a button element</button>
+        </div>
+      </div>
     </div>
-
     <!-- Necessary jQuery instance file -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-
     <!-- Custom select script file -->
-    <script src="./src/js/modal-load-content.js"></script>
+    <script src="./dist/js/modal-load-content.min.js"></script>
     <script>
       $('.call-to-action').modalLoadContent({
         debugMode: true
