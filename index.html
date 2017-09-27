@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jQuery Modal Load Content</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Willian Keller, will_levinski@hotmail.com">
+    <link rel="stylesheet" type="text/css" href="./dist/css/modal-load-content.css">
+    <!-- Used just to create example file. (Not necessary at all) -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 min-height">
+          <h4>Example One:</h4>
+          <p>Simple use, just define the class you want to open the modal: <em>Google can be loaded externally</em></p>
+          <pre><code>$('.call-to-google').modalLoadContent();</code></pre>
+          <a class="btn btn-danger call-to-google" href="http://www.google.com">Try to load Google.com</a>
+        </div>
+        <div class="col-md-6 min-height">
+          <h4>Example Two:</h4>
+          <p>Open a external page. Opening a GitHub page: <em>Using a target .page-header to load</em></p>
+          <pre><code>$('.call-to-git').modalLoadContent();</code></pre>
+          <a class="btn btn-success call-to-git" data-target=".page-header" href="http://williankeller.github.io/checkbox-switch/">Open Checkbox Switch </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 min-height">
+          <h4>Example Three:</h4>
+          <p>Trying to open a page that not exist: <em>Check your browser console</em></p>
+          <pre><code>$('.call-to-error').modalLoadContent({
+  debugMode: true
+});</code></pre>
+          <a class="btn btn-warning call-to-error" href="/not-here.php">Try to load Error page</a>
+        </div>
+        <div class="col-md-6 min-height">
+          <h4>Example Four:</h4>
+          <p>Opening a content from a button element: <em>Without a target defined.</em></p>
+          <pre><code>$('.call-to-button').modalLoadContent({
+  closeButtonIcon: 'CLOSE',
+  closeButtonText: 'Click to close'
+});</code></pre>
+          <button class="btn call-to-button" data-href="https://williankeller.github.io/jquery-custom-select/">This is a button element</button>
+        </div>
+      </div>
+    </div>
+    <!-- Necessary jQuery instance file -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <!-- Custom select script file -->
+    <script src="./dist/js/modal-load-content.min.js"></script>
+    <script>
+      // just define the class you want to open the modal.
+      $('.call-to-google').modalLoadContent();
+      // Open a external page. Opening a GitHub page.
+      $('.call-to-git').modalLoadContent();
+      // Trying to open a page that not exist.
+      $('.call-to-error').modalLoadContent({
+        debugMode: true
+      });
+      // Opening a content from a button element
+      $('.call-to-button').modalLoadContent({
+        closeButtonIcon: 'CLOSE',
+        closeButtonText: 'Click to close'
+      });
+    </script>
+  </body>
+</html>

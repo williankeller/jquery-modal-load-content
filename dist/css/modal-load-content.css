@@ -3,8 +3,15 @@
   margin-top: 150px;
   text-align: center;
 }
-
+.min-height {
+  height: 230px;
+  text-align: left;
+}
+.min-height p {
+  height: 40px;
+}
 /* End demo styles */
+
 .modal-load-content-overlay {
   background-color: rgba(0, 0, 0, 0.4);
   display: none;
