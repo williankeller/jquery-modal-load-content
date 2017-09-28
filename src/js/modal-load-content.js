@@ -1,5 +1,5 @@
 (function ($, window, document) {
-  "use strict";
+  'use strict';
 
   $.fn.modalLoadContent = function (options) {
 
@@ -48,11 +48,8 @@
      * @returns {string}
      */
     var getModalHref = function (element) {
-      var $element = $(element),
-        // Get from data attribute or default href attribute.
-        href = $element.data('href') || $element.attr('href');
-
-      return href;
+      // Return from data attribute or default href attribute.
+      return $(element).data('href') || $(element).attr('href');
     };
 
     /**
@@ -115,23 +112,32 @@
      *   Return false to kill function.
      */
     var resizeModal = function () {
+      // Intance variables.
+      var modal,
+        winHeight,
+        winWidth,
+        modalHeight,
+        modalWidth,
+        marginTop,
+        marginLeft;
+
       // Kills function if modal is not opened.
       if (! $(settings.containerClass).hasClass('opened')) {
         return false;
       }
 
       // Working just with modal that contains opened class.
-      var $modal = $(settings.containerClass + '.opened');
+      modal = settings.containerClass + '.opened';
 
       // Reset the backdrop height/width to get accurate document size.
-      $modal.removeAttr('style');
+      $(modal).removeAttr('style');
 
       // Get window width and height.
-      var winHeight = $(window).height(),
-        winWidth = $(window).width();
+      winHeight = $(window).height();
+      winWidth = $(window).width();
       // Get modal width and height.
-      var modalHeight = $modal.outerHeight(),
-        modalWidth = $modal.outerWidth();
+      modalHeight = $(modal).outerHeight();
+      modalWidth = $(modal).outerWidth();
 
       // Set window height to modal if it exceeds the maximum size.
       if (modalHeight >= winHeight) {
@@ -143,11 +149,11 @@
       }
 
       // Get and set the modal position into the window.
-      var marginTop = (winHeight / 2) - (modalHeight / 2),
-        marginLeft = (winWidth / 2) - (modalWidth / 2);
+      marginTop = (winHeight / 2) - (modalHeight / 2);
+      marginLeft = (winWidth / 2) - (modalWidth / 2);
 
       // Apply the position changes.
-      $modal.css('height', modalHeight)
+      $(modal).css('height', modalHeight)
         .css('width', modalWidth)
         .css('top', marginTop)
         .css('left', marginLeft);
@@ -176,6 +182,7 @@
      * Closes current modal or all of them.
      */
     var closeModal = function () {
+      // Intance variables.
       var modal = settings.containerClass + '.opened';
       // Hide modal.
       $(modal).removeClass('opened')
@@ -245,6 +252,11 @@
      * @returns {Boolean}
      */
     var detectClickAction = function (element) {
+      // Intance variables.
+      var href,
+        identifier,
+        container;
+
       // Click at link event.
       $(element).on('click', function (event) {
         event.preventDefault();
@@ -252,11 +264,11 @@
         // Build modal overlay content and insert into the body.
         buildModalOverlay();
         // Get href value from defined item.
-        var href = getModalHref(element);
+        href = getModalHref(element);
         // Filter and return a clean ID from a URL.
-        var identifier = getModalIdentifier(href);
+        identifier = getModalIdentifier(href);
         // Build modal container to receive content that will be loaded.
-        var container = buildModalContainer(identifier);
+        container = buildModalContainer(identifier);
 
         // Work to load the content from a URL inside the modal container.
         loadContent(element, container, href, function () {
@@ -327,14 +339,18 @@
      * @returns {DOM}
      */
     var init = function (elements) {
+      // Map all elements.
       elements.each(function () {
         // Build the custom select elements.
         detectClickAction(this);
       });
+
       // Open modal with the related URL fragment.
       detectUrlFragment(elements);
+
       // Detect resize action to improve modal placement.
       detectResizeAction();
+
       // Detect click action under overlay.
       detectActionsToClose();
 
